@@ -13,6 +13,7 @@
         android:theme="@style/Theme.TiltBallGame">
         <activity
             android:name=".GamePlay"
+            android:screenOrientation="landscape"
             android:exported="true"
             android:label="@string/title_activity_game_play"
             android:theme="@style/Theme.TiltBallGame" />
