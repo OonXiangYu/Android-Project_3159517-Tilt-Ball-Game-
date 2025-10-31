@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.view.Surface
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.tiltballgame.ui.theme.TiltBallGameTheme
 
@@ -145,15 +146,15 @@ class GamePlay : ComponentActivity(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-        if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) { // Run when the tilt change
-            val x = event.values[0]
-            val y = event.values[1]
+        if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
+            val x = event.values[0] // tilting left/right
+            val y = event.values[1] // tilting forward/backward
 
-            // Moving ball by speed 5
-            ballX += y * 5
-            ballY += x * 5
+            // Swap axes for landscape
+            ballX += y * 5    // tilting forward/back tilts horizontally
+            ballY += x * 5   // tilting left/right tilts vertically
 
-            // keep inside screen
+            // Keep ball inside world
             ballX = ballX.coerceIn(radius, worldWidth - radius)
             ballY = ballY.coerceIn(radius, worldHeight - radius)
 

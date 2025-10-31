@@ -41,6 +41,7 @@ android {
 
 dependencies {
     implementation( "androidx.navigation:navigation-compose:2.9.5")
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.9.3")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

@@ -16,9 +16,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,7 +47,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            NavigationScreen()
+            TiltBallGameTheme {
+                NavigationScreen()
+            }
         }
     }
 
@@ -71,12 +73,15 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun HomeScreen( navController: NavController ){ // Home screen
-        Surface(modifier = Modifier.fillMaxSize()){
+        Surface(modifier = Modifier.fillMaxSize(), color = Color.Black){
             Column(
                 verticalArrangement = Arrangement.Center, // Center Design
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
-                Text("Home")
+                Row{
+                    Text(text = "Tilt", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.primary)
+                    Text(text = "Ball", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.secondary)
+                }
                 Spacer(modifier = Modifier.height(10.dp))
                 Button({ navController.navigate("level")}){ // Button to next page (Level page)
                     Text("Start")
@@ -89,15 +94,15 @@ class MainActivity : ComponentActivity() {
     fun LevelScreen( navController: NavController ){ // Level screen
         val context = LocalContext.current // Current Screen
 
-        Surface(modifier = Modifier.fillMaxSize(), color = Color.Black){
+        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background){
             Column(
                 modifier = Modifier.fillMaxSize().padding(25.dp)
             ) {
                 Button({ navController.navigate("home")},
                     modifier = Modifier.height(50.dp).width(50.dp),
-                    shape = RoundedCornerShape(16.dp),
+                    shape = MaterialTheme.shapes.medium,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFEF476F), // Button color
+                        containerColor = MaterialTheme.colorScheme.secondary, // Button color
                     ),
                     contentPadding = PaddingValues(0.dp) // remove internal padding
                 ){
@@ -115,107 +120,78 @@ class MainActivity : ComponentActivity() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row {
-                    Button({ // Go to lvl1
-                        lvlNum.value = 1
+                    LevelButton(level = 1) { selectedLevel ->
+                        lvlNum.value = selectedLevel
                         val intent = Intent(context, GamePlay::class.java)
-                        intent.putExtra("Level Number", lvlNum.value)
-                        startActivity(intent)
-                    },
-                        modifier = Modifier.height(75.dp).width(75.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF118AF2), // Button color
-                            contentColor = Color.White           // Text color
-                        )
-                    ){
-                        Text("1", fontSize = 24.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+                        intent.putExtra("Level Number", selectedLevel)
+                        context.startActivity(intent)
                     }
                     Spacer(modifier = Modifier.width(10.dp))
-                    Button({ // Go to lvl2
-                        lvlNum.value = 2
+                    LevelButton(level = 2) { selectedLevel ->
+                        lvlNum.value = selectedLevel
                         val intent = Intent(context, GamePlay::class.java)
-                        intent.putExtra("Level Number", lvlNum.value)
-                        startActivity(intent)
-                    },
-                        modifier = Modifier.height(75.dp).width(75.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF118AF2), // Button color
-                            contentColor = Color.White           // Text color
-                        )
-                    ){
-                        Text("2", fontSize = 24.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+                        intent.putExtra("Level Number", selectedLevel)
+                        context.startActivity(intent)
                     }
                     Spacer(modifier = Modifier.width(10.dp))
-                    Button({ // Go to lvl3
-                        lvlNum.value = 3
+                    LevelButton(level = 3) { selectedLevel ->
+                        lvlNum.value = selectedLevel
                         val intent = Intent(context, GamePlay::class.java)
-                        intent.putExtra("Level Number", lvlNum.value)
-                        startActivity(intent)
-                    },
-                        modifier = Modifier.height(75.dp).width(75.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF118AF2), // Button color
-                            contentColor = Color.White           // Text color
-                        )
-                    ){
-                        Text("3", fontSize = 24.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+                        intent.putExtra("Level Number", selectedLevel)
+                        context.startActivity(intent)
                     }
                 }
 
                 Spacer(modifier = Modifier.height(15.dp))
 
                 Row {
-                    Button({ // Go to lvl4
-                        lvlNum.value = 4
+                    LevelButton(level = 4) { selectedLevel ->
+                        lvlNum.value = selectedLevel
                         val intent = Intent(context, GamePlay::class.java)
-                        intent.putExtra("Level Number", lvlNum.value)
-                        startActivity(intent)
-                    },
-                        modifier = Modifier.height(75.dp).width(75.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF118AF2), // Button color
-                            contentColor = Color.White           // Text color
-                        )
-                    ){
-                        Text("4", fontSize = 24.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+                        intent.putExtra("Level Number", selectedLevel)
+                        context.startActivity(intent)
                     }
                     Spacer(modifier = Modifier.width(10.dp))
-                    Button({ // Go to lvl5
-                        lvlNum.value = 5
+                    LevelButton(level = 5) { selectedLevel ->
+                        lvlNum.value = selectedLevel
                         val intent = Intent(context, GamePlay::class.java)
-                        intent.putExtra("Level Number", lvlNum.value)
-                        startActivity(intent)
-                    },
-                        modifier = Modifier.height(75.dp).width(75.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF118AF2), // Button color
-                            contentColor = Color.White           // Text color
-                        )
-                    ){
-                        Text("5", fontSize = 24.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+                        intent.putExtra("Level Number", selectedLevel)
+                        context.startActivity(intent)
                     }
                     Spacer(modifier = Modifier.width(10.dp))
-                    Button({ // Go to lvl6
-                        lvlNum.value = 6
+                    LevelButton(level = 6) { selectedLevel ->
+                        lvlNum.value = selectedLevel
                         val intent = Intent(context, GamePlay::class.java)
-                        intent.putExtra("Level Number", lvlNum.value)
-                        startActivity(intent)
-                    },
-                        modifier = Modifier.height(75.dp).width(75.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF118AF2), // Button color
-                            contentColor = Color.White           // Text color
-                        )
-                    ){
-                        Text("6", fontSize = 24.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+                        intent.putExtra("Level Number", selectedLevel)
+                        context.startActivity(intent)
                     }
                 }
             }
         }
     }
+
+    @Composable // Reusable button for going to game level
+    fun LevelButton(
+        level: Int,
+        color: Color = MaterialTheme.colorScheme.primary,
+        onClick: (Int) -> Unit
+    ) {
+        Button(
+            onClick = { onClick(level) },
+            modifier = Modifier
+                .height(75.dp)
+                .width(75.dp),
+            shape = MaterialTheme.shapes.medium,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = color,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            )
+        ) {
+            Text(
+                text = "$level",
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        }
+    }
+
 }
