@@ -84,7 +84,7 @@ class MainActivity : ComponentActivity() {
                 }
                 Spacer(modifier = Modifier.height(10.dp))
                 Button({ navController.navigate("level")}){ // Button to next page (Level page)
-                    Text("Start")
+                    Text("Start", style = MaterialTheme.typography.titleMedium)
                 }
             }
         }
@@ -103,14 +103,13 @@ class MainActivity : ComponentActivity() {
                     shape = MaterialTheme.shapes.medium,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.secondary, // Button color
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     ),
-                    contentPadding = PaddingValues(0.dp) // remove internal padding
+                    contentPadding = PaddingValues(0.dp) // remove extra padding
                 ){
-                    Image(
-                        painter = painterResource(id = R.drawable.whilte_left_arrow),
-                        contentDescription = "Back Arrow",
-                        modifier = Modifier.height(25.dp).wrapContentWidth(),
-                        contentScale = ContentScale.Fit
+                    Text(
+                        text = "<",
+                        style = MaterialTheme.typography.labelMedium,
                     )
                 }
                 Spacer(modifier = Modifier.height(30.dp))
@@ -189,7 +188,7 @@ class MainActivity : ComponentActivity() {
         ) {
             Text(
                 text = "$level",
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.titleLarge,
             )
         }
     }

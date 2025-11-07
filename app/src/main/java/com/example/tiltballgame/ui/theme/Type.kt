@@ -27,6 +27,16 @@ val bagelFamily = FontFamily(
     )
 )
 
+val cherryFont = GoogleFont("Cherry Bomb One")
+val cherryFamily = FontFamily(
+    Font(
+        cherryFont,
+        weight = FontWeight.Normal,
+        style = FontStyle.Normal,
+        fontProvider = provider
+    )
+)
+
 // Set of Material typography styles to start with
 val AppTypography = Typography(
     bodyLarge = TextStyle(
@@ -41,5 +51,23 @@ val AppTypography = Typography(
         fontFamily =bagelFamily,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
-    )
+    ),
+    titleMedium = TextStyle(
+        fontSize = 24.sp,
+        fontFamily =bagelFamily,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    titleSmall = TextStyle(
+        fontSize = 16.sp,
+        fontFamily =bagelFamily,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    labelMedium = TextStyle(
+        fontSize = 24.sp,
+        fontFamily =cherryFamily,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
 )

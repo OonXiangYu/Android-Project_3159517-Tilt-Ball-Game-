@@ -8,19 +8,10 @@ import android.hardware.SensorManager
 import android.os.Bundle
 import android.view.View
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.view.Surface
-import androidx.compose.ui.tooling.preview.Preview
+import android.view.MotionEvent
 import com.example.tiltballgame.ui.theme.TiltBallGameTheme
 
 data class WorldObject(
@@ -28,7 +19,8 @@ data class WorldObject(
     val y: Float,
     val width: Float = 80f,
     val height: Float = 80f,
-    val colorCode: String = "#FFFFFF"
+    var colorCode: String = "#FFFFFF",
+    val isColorChanger: Boolean = false
 )
 
 class GamePlay : ComponentActivity(), SensorEventListener {
@@ -76,13 +68,10 @@ class GamePlay : ComponentActivity(), SensorEventListener {
 
                 objects = when (lvlNum) {
                     1 -> listOf(
-                        WorldObject(ballX - 100f, ballY - 100f),
-                        WorldObject(ballX + 120f, ballY - 80f)
-                    )
-                    2 -> listOf(
-                        WorldObject(ballX - 150f, ballY - 120f),
-                        WorldObject(ballX + 160f, ballY - 50f),
-                        WorldObject(ballX, ballY + 200f)
+                        WorldObject(ballX - 200f , ballY - 500f, 2000f, 100f),
+                        WorldObject(ballX - 200f , ballY - 500f, 100f, 1000f),
+                        WorldObject(ballX - 200f , ballY + 500f, 2000f, 100f),
+                        WorldObject(ballX - 400f, ballY, 150f, 150f, "#EF476F", isColorChanger = true),
                     )
                     else -> listOf(
                         WorldObject(ballX - 100f, ballY - 100f),
@@ -92,6 +81,30 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                     )
                 }
             }
+
+            override fun onTouchEvent(event: MotionEvent): Boolean { // Touch event
+                if (event.action == MotionEvent.ACTION_DOWN) { // If user tap on screen
+
+                    // Check the relative coordinate cuz my camera will mov
+                    val touchX = event.x + cameraX
+                    val touchY = event.y + cameraY
+
+                    objects.forEach { obj ->
+                        if (obj.isColorChanger && // Check whether this block a interactable block
+                            touchX >= obj.x && touchX <= obj.x + obj.width && // Check whether user click on the block
+                            touchY >= obj.y && touchY <= obj.y + obj.height) {
+
+                            // Swap colors
+                            val tempColor = paint.color
+                            paint.color = Color.parseColor(obj.colorCode)
+                            obj.colorCode = String.format("#%06X", 0xFFFFFF and tempColor)
+                        }
+                    }
+                    invalidate() // Force to redraw
+                }
+                return true
+            }
+
 
             override fun onDraw(canvas: Canvas) { // Draw when it need to redraw
                 super.onDraw(canvas)
@@ -158,6 +171,16 @@ class GamePlay : ComponentActivity(), SensorEventListener {
             ballX = ballX.coerceIn(radius, worldWidth - radius)
             ballY = ballY.coerceIn(radius, worldHeight - radius)
 
+            // Collision detection and response
+            for (obj in objects) {
+                if (isColliding(ballX, ballY, radius, obj)) {
+                    val corrected = resolveCollision(ballX, ballY, radius, obj)
+                    ballX = corrected.first
+                    ballY = corrected.second
+                }
+            }
+
+            // Redraw after movement
             ballView.invalidate()
         }
     }
@@ -178,4 +201,68 @@ class GamePlay : ComponentActivity(), SensorEventListener {
         )
     }
 
+    fun isColliding(ballX: Float, ballY: Float, radius: Float, obj: WorldObject): Boolean { // Check the collision between block and world objects
+
+        // Find the closet point on the world object to the ball center
+        val closestX = ballX.coerceIn(obj.x, obj.x + obj.width)
+        val closestY = ballY.coerceIn(obj.y, obj.y + obj.height)
+
+        // Get the distance from ball center to the closest point on the world object
+        val dx = ballX - closestX
+        val dy = ballY - closestY
+
+        return dx * dx + dy * dy < radius * radius
+    }
+
+    /*
+        Simple Explanation for fun below with an example, assume our ball center is (10,10), radius is 60,
+        there is a rectangle with 100 * 100 and top left corner is (50, 50), bottom right corner is (150, 150)
+
+        Step 1:
+        val closestX = ballX.coerceIn(obj.x, obj.x + obj.width) = 0.coerceIn(50, 150) = 50
+        val closestY = ballY.coerceIn(obj.y, obj.y + obj.height) = 0.coerceIn(50, 150) = 50
+
+        The closet point on rectangle to ball is (50, 50)
+
+        Step 2:
+        val dx = ballX - closestX = 10 - 50 = -40
+        val dy = ballY - closestY = 10 - 50 = -40
+        val dist = kotlin.math.sqrt(dx * dx + dy * dy) = sqrt((-40) ^ 2 + (-40) ^ 2) = sqrt(3200) = 56.57
+
+        Step 3:
+        val overlap = radius - dist = 60 - 56.57 = 3.43 ( over 0 means overlap)
+
+        Step 4:
+        val nx = dx / dist = -40 / 56.57 = -0.707
+        val ny = dy / dist = -40 / 56.57 = -0.707
+
+        Step 5 (Since we need to push the ball out as it overlapping):
+        ballX + nx * overlap = 10 + (-0.707 * 3.42) = 7.57
+        ballY + ny * overlap = 10 + (-0.707 * 3.42) = 7.57
+
+        So the ball will be reset to (7.57 ,7.57) and it is the border of the world object
+    */
+    fun resolveCollision(ballX: Float, ballY: Float, radius: Float, obj: WorldObject): Pair<Float, Float> { // This is for adjust the ball position if it collides with world object
+
+        // Find the closet point on the world object to the ball center
+        val closestX = ballX.coerceIn(obj.x, obj.x + obj.width)
+        val closestY = ballY.coerceIn(obj.y, obj.y + obj.height)
+
+        // Get the distance from ball center to the closest point on the world object
+        val dx = ballX - closestX
+        val dy = ballY - closestY
+        val dist = kotlin.math.sqrt(dx * dx + dy * dy) // Distance formula
+
+        if (dist == 0f) return Pair(ballX, ballY) // Avoid divide by zero
+
+        val overlap = radius - dist // How much ball is overlapping the world object
+
+        if (overlap > 0) { // Above zero means overlap(collide) happens
+            val nx = dx / dist // Get the unit vector
+            val ny = dy / dist
+            return Pair(ballX + nx * overlap, ballY + ny * overlap) // Reset the ball position
+        }
+
+        return Pair(ballX, ballY)
+    }
 }
