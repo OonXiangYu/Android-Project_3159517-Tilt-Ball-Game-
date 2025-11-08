@@ -96,7 +96,7 @@ class MainActivity : ComponentActivity() {
 
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background){
             Column(
-                modifier = Modifier.fillMaxSize().padding(25.dp)
+                modifier = Modifier.fillMaxSize().padding(50.dp)
             ) {
                 Button({ navController.navigate("home")},
                     modifier = Modifier.height(50.dp).width(50.dp),

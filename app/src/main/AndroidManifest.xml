@@ -12,10 +12,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TiltBallGame">
         <activity
-            android:name=".GamePlay"
+            android:name=".VictoryPage"
+            android:exported="false"
+            android:label="@string/title_activity_victory_page"
             android:screenOrientation="landscape"
+            android:theme="@style/Theme.TiltBallGame" />
+        <activity
+            android:name=".GamePlay"
             android:exported="true"
             android:label="@string/title_activity_game_play"
+            android:screenOrientation="landscape"
             android:theme="@style/Theme.TiltBallGame" />
         <activity
             android:name=".MainActivity"

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Tilt Ball Game</string>
     <string name="title_activity_game_play">GamePlay</string>
+    <string name="title_activity_victory_page">VictoryPage</string>
 </resources>

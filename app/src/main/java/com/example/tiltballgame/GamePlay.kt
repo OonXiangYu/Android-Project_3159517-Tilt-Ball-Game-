@@ -1,6 +1,7 @@
 package com.example.tiltballgame
 
 import android.content.Context
+import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -20,7 +21,8 @@ data class WorldObject(
     val width: Float = 80f,
     val height: Float = 80f,
     var colorCode: String = "#FFFFFF",
-    val isColorChanger: Boolean = false
+    val isColorChanger: Boolean = false,
+    var isGoal: Boolean = false
 )
 
 class GamePlay : ComponentActivity(), SensorEventListener {
@@ -45,13 +47,20 @@ class GamePlay : ComponentActivity(), SensorEventListener {
     private var cameraX = 0f // camera x-axis
     private var cameraY = 0f // camera y-axis
 
-    private var objects: List<WorldObject> = listOf()
-    private var lvlNum: Int = 0
+    private var objects: List<WorldObject> = listOf() // objs for design lvl
+    private var lvlNum: Int = 0 // level
+
+
+    private var startTime = 0L // the time u start this level
+    private var timeSpend = 0L // time u spend on this level
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         lvlNum = intent.getIntExtra("Level Number", 0)
+
+        startTime = System.currentTimeMillis()
 
         ballView = object : View(this) { // Draw the ball
             override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -69,9 +78,12 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                 objects = when (lvlNum) {
                     1 -> listOf(
                         WorldObject(ballX - 200f , ballY - 500f, 2000f, 100f),
-                        WorldObject(ballX - 200f , ballY - 500f, 100f, 1000f),
+                        WorldObject(ballX - 200f , ballY - 400f, 100f, 1000f),
                         WorldObject(ballX - 200f , ballY + 500f, 2000f, 100f),
                         WorldObject(ballX - 400f, ballY, 150f, 150f, "#EF476F", isColorChanger = true),
+                        WorldObject(ballX + 200f , ballY - 400f, 100f, 900f, "#EF476F", isColorChanger = true),
+                        WorldObject(ballX + 350f , ballY - 400f, 100f, 900f, "#EF476F", isColorChanger = true),
+                        WorldObject(ballX + 550f , ballY - 400f, 150f,900f, "#08F26E", isGoal = true),
                     )
                     else -> listOf(
                         WorldObject(ballX - 100f, ballY - 100f),
@@ -145,6 +157,19 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                     isAntiAlias = true
                 }
                 canvas.drawText("Level $lvlNum", cameraX + 50f, cameraY + 200f, textPaint)
+
+                timeSpend = System.currentTimeMillis() - startTime // Show the time u spend on this lvl
+                val totalSec = (timeSpend / 1000).toInt()
+                val min = totalSec / 60
+                val sec = totalSec % 60
+
+                val timeText = if (min > 0) {
+                    String.format("%dm %02ds", min, sec)
+                } else {
+                    "$sec s" // still under a minute
+                }
+
+                canvas.drawText("Time: $timeText", cameraX + 50f, cameraY + 300f, textPaint)
             }
 
         }
@@ -174,6 +199,14 @@ class GamePlay : ComponentActivity(), SensorEventListener {
             // Collision detection and response
             for (obj in objects) {
                 if (isColliding(ballX, ballY, radius, obj)) {
+
+                    if (obj.isGoal) { // Navigate to VictoryPage
+                        val intent = Intent(this@GamePlay, VictoryPage::class.java)
+                        intent.putExtra("Time Spend", timeSpend)
+                        startActivity(intent)
+                        return
+                    }
+
                     val corrected = resolveCollision(ballX, ballY, radius, obj)
                     ballX = corrected.first
                     ballY = corrected.second
@@ -202,6 +235,12 @@ class GamePlay : ComponentActivity(), SensorEventListener {
     }
 
     fun isColliding(ballX: Float, ballY: Float, radius: Float, obj: WorldObject): Boolean { // Check the collision between block and world objects
+
+        val objColor = Color.parseColor(obj.colorCode)
+
+        if (objColor == paint.color) { // If color is same then no collision
+            return false
+        }
 
         // Find the closet point on the world object to the ball center
         val closestX = ballX.coerceIn(obj.x, obj.x + obj.width)

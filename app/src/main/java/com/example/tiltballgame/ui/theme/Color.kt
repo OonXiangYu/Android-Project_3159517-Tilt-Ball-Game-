@@ -17,3 +17,5 @@ val Blue40 = Color(0xFF118AF2)
 val White = Color(0xFFFFFFFF)
 
 val Black = Color(0xFF000000)
+
+val Yellow = Color(0xFFFFEA61)
