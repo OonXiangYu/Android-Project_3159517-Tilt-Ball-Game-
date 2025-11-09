@@ -22,7 +22,9 @@ data class WorldObject(
     val height: Float = 80f,
     var colorCode: String = "#FFFFFF",
     val isColorChanger: Boolean = false,
-    var isGoal: Boolean = false
+    var isGoal: Boolean = false,
+    val type: String = "block",
+    val text: String = ""
 )
 
 class GamePlay : ComponentActivity(), SensorEventListener {
@@ -77,13 +79,21 @@ class GamePlay : ComponentActivity(), SensorEventListener {
 
                 objects = when (lvlNum) {
                     1 -> listOf(
-                        WorldObject(ballX - 200f , ballY - 500f, 2000f, 100f),
+                        WorldObject(ballX - 200f , ballY - 500f, 3000f, 100f),
                         WorldObject(ballX - 200f , ballY - 400f, 100f, 1000f),
-                        WorldObject(ballX - 200f , ballY + 500f, 2000f, 100f),
-                        WorldObject(ballX - 400f, ballY, 150f, 150f, "#EF476F", isColorChanger = true),
+                        WorldObject(ballX - 200f , ballY + 500f, 3000f, 100f),
                         WorldObject(ballX + 200f , ballY - 400f, 100f, 900f, "#EF476F", isColorChanger = true),
-                        WorldObject(ballX + 350f , ballY - 400f, 100f, 900f, "#EF476F", isColorChanger = true),
-                        WorldObject(ballX + 550f , ballY - 400f, 150f,900f, "#08F26E", isGoal = true),
+                        WorldObject(ballX + 200f , ballY,100f,50f, type = "text", text = "Click"),
+                        WorldObject(ballX + 700f , ballY - 400f, 100f, 900f, "#EF476F", isColorChanger = true),
+                        WorldObject(ballX + 700f , ballY,100f,50f, type = "text", text = "Click"),
+                        WorldObject(ballX + 450f , ballY - 300f,100f,50f, type = "text", text = "Match Color to Pass"),
+                        WorldObject(ballX + 1200f , ballY - 400f, 100f, 750f),
+                        WorldObject(ballX + 1200f , ballY + 350f, 100f, 150f, "#118AF2", isColorChanger = true),
+                        WorldObject(ballX + 2000f , ballY - 250f, 100f, 750f),
+                        WorldObject(ballX + 2000f , ballY - 400f, 100f, 150f, "#EF476F", isColorChanger = true),
+                        WorldObject(ballX + 2500f , ballY + 300f,100f,50f, type = "text", text = "Goal"),
+                        WorldObject(ballX + 2500f , ballY + 350f, 100f,100f, "#08F26E", isGoal = true),
+                        WorldObject(ballX + 2800f , ballY - 500f, 100f, 1100f),
                     )
                     else -> listOf(
                         WorldObject(ballX - 100f, ballY - 100f),
@@ -143,14 +153,30 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                     if (obj.x + obj.width > cameraX && obj.x < cameraX + maxX &&
                         obj.y + obj.height > cameraY && obj.y < cameraY + maxY) {
 
-                        val objPaint = Paint().apply {
-                            color = Color.parseColor(obj.colorCode)
-                            isAntiAlias = true
+                        if (obj.type == "text" && obj.text.isNotEmpty()) { // If the world object is text
+                            val textPaint = Paint().apply {
+                                color = Color.parseColor(obj.colorCode)
+                                textSize = 80f
+                                isAntiAlias = true
+                                textAlign = Paint.Align.CENTER
+                            }
+                            canvas.drawText(
+                                obj.text,
+                                obj.x + obj.width / 2,   // center horizontally
+                                obj.y + obj.height / 2,  // roughly center vertically
+                                textPaint
+                            )
+                        }else{ // If the world object is block
+                            val objPaint = Paint().apply {
+                                color = Color.parseColor(obj.colorCode)
+                                isAntiAlias = true
+                            }
+                            canvas.drawRect(obj.x, obj.y, obj.x + obj.width, obj.y + obj.height, objPaint)
                         }
-                        canvas.drawRect(obj.x, obj.y, obj.x + obj.width, obj.y + obj.height, objPaint)
                     }
                 }
 
+                //UI
                 val textPaint = Paint().apply { // Draw lvl number that follow camera
                     color = Color.WHITE
                     textSize = 60f
@@ -238,7 +264,7 @@ class GamePlay : ComponentActivity(), SensorEventListener {
 
         val objColor = Color.parseColor(obj.colorCode)
 
-        if (objColor == paint.color) { // If color is same then no collision
+        if (objColor == paint.color || obj.type == "text") { // If color is same or the object is a text then no collision
             return false
         }
 
