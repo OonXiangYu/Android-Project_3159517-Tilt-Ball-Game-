@@ -95,6 +95,19 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                         WorldObject(ballX + 2500f , ballY + 350f, 100f,100f, "#08F26E", isGoal = true),
                         WorldObject(ballX + 2800f , ballY - 500f, 100f, 1100f),
                     )
+                    2 -> listOf(
+                        WorldObject(ballX - 3000f , ballY - 800f, 6000f, 600f),
+                        WorldObject(ballX - 4000f , ballY - 800f, 1000f, 600f),
+                        WorldObject(ballX - 200f , ballY - 200f, 100f, 500f, "#118AF2", isColorChanger = true),
+                        WorldObject(ballX + 300f , ballY - 200f, 100f, 500f, "#EF476F", isColorChanger = true),
+                        WorldObject(ballX - 2800f , ballY - 200f, 100f, 500f, "#EF476F", isColorChanger = true),
+                        WorldObject(ballX - 3000f , ballY + 300f, 6000f, 600f),
+                        WorldObject(ballX + 3200f , ballY - 1500f, 800f, 3000f),
+                        WorldObject(ballX - 4000f , ballY - 300f, 800f, 2500f),
+                        WorldObject(ballX + 1700f , ballY - 200f, 1300f, 500f),
+                        WorldObject(ballX - 4000f, ballY + 1500f, 8000f, 400f),
+
+                    )
                     else -> listOf(
                         WorldObject(ballX - 100f, ballY - 100f),
                         WorldObject(ballX + 120f, ballY - 80f),
@@ -179,7 +192,7 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                 //UI
                 val textPaint = Paint().apply { // Draw lvl number that follow camera
                     color = Color.WHITE
-                    textSize = 60f
+                    textSize = 40f
                     isAntiAlias = true
                 }
                 canvas.drawText("Level $lvlNum", cameraX + 50f, cameraY + 200f, textPaint)
