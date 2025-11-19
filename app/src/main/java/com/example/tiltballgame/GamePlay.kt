@@ -102,11 +102,67 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                         WorldObject(ballX + 300f , ballY - 200f, 100f, 500f, "#EF476F", isColorChanger = true),
                         WorldObject(ballX - 2800f , ballY - 200f, 100f, 500f, "#EF476F", isColorChanger = true),
                         WorldObject(ballX - 3000f , ballY + 300f, 6000f, 600f),
-                        WorldObject(ballX + 3200f , ballY - 1500f, 800f, 3000f),
-                        WorldObject(ballX - 4000f , ballY - 300f, 800f, 2500f),
+                        WorldObject(ballX + 3200f , ballY - 2000f, 800f, 4000f),
+                        WorldObject(ballX - 4000f , ballY - 2000f, 800f, 4000f),
                         WorldObject(ballX + 1700f , ballY - 200f, 1300f, 500f),
                         WorldObject(ballX - 4000f, ballY + 1500f, 8000f, 400f),
-
+                        WorldObject(ballX - 2800f , ballY + 900f, 100f, 310f, "#EF476F", isColorChanger = true),
+                        WorldObject(ballX - 2800f , ballY + 1200f, 100f, 300f, "#118AF2", isColorChanger = true),
+                        WorldObject(ballX - 2500f , ballY + 900f, 100f, 310f, "#118AF2", isColorChanger = true),
+                        WorldObject(ballX - 2500f , ballY + 1200f, 100f, 300f, "#EF476F", isColorChanger = true),
+                        WorldObject(ballX - 2200f , ballY + 1050f, 100f, 450f),
+                        WorldObject(ballX - 1950f , ballY + 1050f, 400f, 100f),
+                        WorldObject(ballX - 1550f , ballY + 850f, 100f, 300f),
+                        WorldObject(ballX - 1200f , ballY + 900f, 100f, 600f, "#118AF2", isColorChanger = true),
+                        WorldObject(ballX - 400f , ballY + 1050f, 100f, 450f),
+                        WorldObject(ballX , ballY + 900f, 100f, 450f),
+                        WorldObject(ballX + 500f , ballY + 900f, 100f, 600f, "#EF476F", isColorChanger = true),
+                        WorldObject(ballX + 800f, ballY + 900f, 100f, 450f),
+                        WorldObject(ballX + 1200f , ballY + 1050f, 100f, 450f),
+                        WorldObject(ballX + 1600f, ballY + 900f, 100f, 450f),
+                        WorldObject(ballX + 2000f , ballY + 900f, 100f, 310f, "#EF476F", isColorChanger = true),
+                        WorldObject(ballX + 2000f , ballY + 1200f, 100f, 300f, "#118AF2", isColorChanger = true),
+                        WorldObject(ballX + 2500f , ballY + 900f, 100f, 310f, "#118AF2", isColorChanger = true),
+                        WorldObject(ballX + 2500f , ballY + 1200f, 100f, 300f, "#EF476F", isColorChanger = true),
+                        WorldObject(ballX + 3000f , ballY - 800f, 200f, 100f, "#118AF2", isColorChanger = true),
+                        WorldObject(ballX - 4000f, ballY - 2000f, 8000f, 400f),
+                        WorldObject(ballX + 2500f , ballY - 1100f, 100f, 300f),
+                        WorldObject(ballX + 2500f , ballY - 1600f, 100f, 300f),
+                        WorldObject(ballX + 2200f , ballY - 1200f, 100f, 400f),
+                        WorldObject(ballX + 2200f , ballY - 1700f, 100f, 300f),
+                        WorldObject(ballX + 1900f , ballY - 1000f, 100f, 300f),
+                        WorldObject(ballX + 1900f , ballY - 1600f, 100f, 400f),
+                        WorldObject(ballX + 1600f , ballY - 1200f, 100f, 400f, "#EF476F", isColorChanger = true),
+                        WorldObject(ballX + 1600f , ballY - 1600f, 100f, 400f, "#118AF2", isColorChanger = true),
+                        WorldObject(ballX + 1300f , ballY - 1000f, 100f, 300f),
+                        WorldObject(ballX + 1300f , ballY - 1600f, 100f, 400f),
+                        WorldObject(ballX + 1000f , ballY - 1200f, 100f, 400f),
+                        WorldObject(ballX + 1000f , ballY - 1700f, 100f, 300f),
+                        WorldObject(ballX + 700f , ballY - 1100f, 100f, 300f),
+                        WorldObject(ballX + 700f , ballY - 1600f, 100f, 300f),
+                        WorldObject(ballX + 400f , ballY - 1000f, 100f, 200f),
+                        WorldObject(ballX + 400f , ballY - 1600f, 100f, 400f),
+                        WorldObject(ballX + 100f , ballY - 900f, 100f, 200f),
+                        WorldObject(ballX + 100f , ballY - 1600f, 100f, 500f),
+                        WorldObject(ballX - 200f , ballY - 1000f, 100f, 200f),
+                        WorldObject(ballX - 200f , ballY - 1600f, 100f, 400f),
+                        WorldObject(ballX - 500f , ballY - 1100f, 100f, 300f),
+                        WorldObject(ballX - 500f , ballY - 1600f, 100f, 300f),
+                        WorldObject(ballX - 800f , ballY - 1200f, 100f, 400f, "#118AF2", isColorChanger = true),
+                        WorldObject(ballX - 800f , ballY - 1600f, 100f, 400f, "#EF476F", isColorChanger = true),
+                        WorldObject(ballX - 1100f , ballY - 1000f, 100f, 200f),
+                        WorldObject(ballX - 1100f , ballY - 1600f, 100f, 400f),
+                        WorldObject(ballX - 1400f , ballY - 1100f, 100f, 300f),
+                        WorldObject(ballX - 1400f , ballY - 1600f, 100f, 300f),
+                        WorldObject(ballX - 1700f , ballY - 1100f, 100f, 300f),
+                        WorldObject(ballX - 1700f , ballY - 1600f, 100f, 300f),
+                        WorldObject(ballX - 2000f , ballY - 1000f, 100f, 300f),
+                        WorldObject(ballX - 2000f , ballY - 1600f, 100f, 400f),
+                        WorldObject(ballX - 2300f , ballY - 900f, 100f, 300f),
+                        WorldObject(ballX - 2300f , ballY - 1600f, 100f, 500f),
+                        WorldObject(ballX - 2600f , ballY - 1200f, 100f, 400f),
+                        WorldObject(ballX - 2600f , ballY - 1600f, 100f, 200f),
+                        WorldObject(ballX - 3200f , ballY - 1600f, 100f,100f, "#08F26E", isGoal = true),
                     )
                     else -> listOf(
                         WorldObject(ballX - 100f, ballY - 100f),
@@ -190,11 +246,20 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                 }
 
                 //UI
+                val outlinePaint = Paint().apply { // Draw a outline for UI to avoid the white text disappear on white background
+                    color = Color.BLACK
+                    textSize = 40f
+                    style = Paint.Style.STROKE
+                    strokeWidth = 6f
+                    isAntiAlias = true
+                }
+
                 val textPaint = Paint().apply { // Draw lvl number that follow camera
                     color = Color.WHITE
                     textSize = 40f
                     isAntiAlias = true
                 }
+                canvas.drawText("Level $lvlNum", cameraX + 50f, cameraY + 200f, outlinePaint)
                 canvas.drawText("Level $lvlNum", cameraX + 50f, cameraY + 200f, textPaint)
 
                 timeSpend = System.currentTimeMillis() - startTime // Show the time u spend on this lvl
@@ -208,6 +273,7 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                     "$sec s" // still under a minute
                 }
 
+                canvas.drawText("Time: $timeText", cameraX + 50f, cameraY + 300f, outlinePaint)
                 canvas.drawText("Time: $timeText", cameraX + 50f, cameraY + 300f, textPaint)
             }
 
