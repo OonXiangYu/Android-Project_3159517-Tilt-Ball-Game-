@@ -12,6 +12,7 @@ import androidx.activity.ComponentActivity
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
 import android.view.MotionEvent
 import com.example.tiltballgame.ui.theme.TiltBallGameTheme
 
@@ -56,6 +57,15 @@ class GamePlay : ComponentActivity(), SensorEventListener {
     private var startTime = 0L // the time u start this level
     private var timeSpend = 0L // time u spend on this level
 
+    var pauseBtnX = 0f // x axis of pause button
+    var pauseBtnY = 0f // y axis of pause button
+    val pauseBtnSize = 120f
+
+    var isPaused = false // boolean for pause
+
+    var totalTimePaused = 0L // cumulative paused time
+
+    var pauseStartTime = 0L // when the pause start
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -180,15 +190,29 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                     val touchX = event.x + cameraX
                     val touchY = event.y + cameraY
 
-                    objects.forEach { obj ->
-                        if (obj.isColorChanger && // Check whether this block a interactable block
-                            touchX >= obj.x && touchX <= obj.x + obj.width && // Check whether user click on the block
-                            touchY >= obj.y && touchY <= obj.y + obj.height) {
+                    // Check the coordinate just specific for UI
+                    val touchCamX = event.x
+                    val touchCamY = event.y
 
-                            // Swap colors
-                            val tempColor = paint.color
-                            paint.color = Color.parseColor(obj.colorCode)
-                            obj.colorCode = String.format("#%06X", 0xFFFFFF and tempColor)
+                    if (touchCamX >= pauseBtnX && touchCamX <= pauseBtnX + pauseBtnSize  &&
+                        touchCamY >= pauseBtnY  && touchCamY <= pauseBtnY + pauseBtnSize ) { // When player click the pause button or we can say top right of screen
+
+                        togglePause()
+                        invalidate()
+                        return true
+                    }
+
+                    if(!isPaused){ // If the game not pause
+                        objects.forEach { obj ->
+                            if (obj.isColorChanger && // Check whether this block a interactable block
+                                touchX >= obj.x && touchX <= obj.x + obj.width && // Check whether user click on the block
+                                touchY >= obj.y && touchY <= obj.y + obj.height) {
+
+                                // Swap colors
+                                val tempColor = paint.color
+                                paint.color = Color.parseColor(obj.colorCode)
+                                obj.colorCode = String.format("#%06X", 0xFFFFFF and tempColor)
+                            }
                         }
                     }
                     invalidate() // Force to redraw
@@ -231,8 +255,8 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                             }
                             canvas.drawText(
                                 obj.text,
-                                obj.x + obj.width / 2,   // center horizontally
-                                obj.y + obj.height / 2,  // roughly center vertically
+                                obj.x + obj.width / 2,   // Center horizontally
+                                obj.y + obj.height / 2,  // Roughly center vertically
                                 textPaint
                             )
                         }else{ // If the world object is block
@@ -262,7 +286,12 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                 canvas.drawText("Level $lvlNum", cameraX + 50f, cameraY + 200f, outlinePaint)
                 canvas.drawText("Level $lvlNum", cameraX + 50f, cameraY + 200f, textPaint)
 
-                timeSpend = System.currentTimeMillis() - startTime // Show the time u spend on this lvl
+                timeSpend = if (isPaused) { // Show the time u spend on this lvl
+                    pauseStartTime - startTime - totalTimePaused  // Freeze time while paused
+                } else {
+                    System.currentTimeMillis() - startTime - totalTimePaused
+                }
+
                 val totalSec = (timeSpend / 1000).toInt()
                 val min = totalSec / 60
                 val sec = totalSec % 60
@@ -273,8 +302,83 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                     "$sec s" // still under a minute
                 }
 
+                val pauseBtnBg = Paint().apply { // Pause button background
+                    color = if (isPaused) Color.GREEN else Color.RED
+                    isAntiAlias = true
+                }
+
+                val pauseSymbol = Paint().apply { // Pause symbol (two white bars)
+                    color = Color.WHITE
+                    strokeWidth = 12f
+                    isAntiAlias = true
+                }
+
+                pauseBtnX = 2400f
+                pauseBtnY = 150f
+                val barWidth = 20f
+                val barHeight = 70f
+
+                canvas.drawRoundRect( // Draw button square
+                    pauseBtnX + cameraX,
+                    pauseBtnY + cameraY,
+                    pauseBtnX + pauseBtnSize + cameraX,
+                    pauseBtnY + pauseBtnSize + cameraY,
+                    20f, 20f,
+                    pauseBtnBg
+                )
+
+                if (!isPaused) { // Draw pause bars
+                    canvas.drawRect(
+                        pauseBtnX + cameraX + 30f, pauseBtnY + cameraY + 25f,
+                        pauseBtnX + cameraX + 30f + barWidth, pauseBtnY + cameraY + 25f + barHeight,
+                        pauseSymbol
+                    )
+                    canvas.drawRect(
+                        pauseBtnX + cameraX + 70f, pauseBtnY + cameraY + 25f,
+                        pauseBtnX + cameraX + 70f + barWidth, pauseBtnY + cameraY + 25f + barHeight,
+                        pauseSymbol
+                    )
+                } else { // Draw triangle “play” symbol
+                    val path = Path()
+                    val left = pauseBtnX + cameraX + 30f
+                    val top = pauseBtnY + cameraY + 25f
+                    val right = pauseBtnX + cameraX + 90f
+                    val bottom = pauseBtnY + cameraY + 95f
+
+                    path.moveTo(left, top)
+                    path.lineTo(right, (top + bottom) / 2)   // tip of triangle
+                    path.lineTo(left, bottom)
+                    path.close()
+
+                    canvas.drawPath(path, pauseSymbol)
+
+                    // Draw Home button when paused
+                    val homeBtnX = 900f  // relative to world or camera
+                    val homeBtnY = 200f
+                    val homeBtnSize = 120f
+                    val homeBtnPaint = Paint().apply { color = Color.BLUE } // default color
+
+                    canvas.drawRoundRect(
+                        homeBtnX + cameraX,
+                        homeBtnY + cameraY,
+                        homeBtnX + cameraX + homeBtnSize,
+                        homeBtnY + cameraY + homeBtnSize,
+                        20f, 20f,
+                        homeBtnPaint
+                    )
+                    // Optionally draw "Home" text
+                    val textPaint = Paint().apply {
+                        color = Color.WHITE
+                        textSize = 50f
+                        isAntiAlias = true
+                    }
+                    canvas.drawText("Home", homeBtnX + cameraX + 20f, homeBtnY + cameraY + 75f, textPaint)
+                }
+
                 canvas.drawText("Time: $timeText", cameraX + 50f, cameraY + 300f, outlinePaint)
                 canvas.drawText("Time: $timeText", cameraX + 50f, cameraY + 300f, textPaint)
+
+                invalidate()
             }
 
         }
@@ -294,8 +398,13 @@ class GamePlay : ComponentActivity(), SensorEventListener {
             val y = event.values[1] // tilting forward/backward
 
             // Swap axes for landscape
-            ballX += y * 5    // tilting forward/back tilts horizontally
-            ballY += x * 5   // tilting left/right tilts vertically
+            if(!isPaused) {
+                ballX += y * 5    // tilting forward/back tilts horizontally
+                ballY += x * 5   // tilting left/right tilts vertically
+            }else{
+                ballX += y * 0   // Make accelarate 0 when pause
+                ballY += x * 0
+            }
 
             // Keep ball inside world
             ballX = ballX.coerceIn(radius, worldWidth - radius)
@@ -409,4 +518,15 @@ class GamePlay : ComponentActivity(), SensorEventListener {
 
         return Pair(ballX, ballY)
     }
+
+    fun togglePause() { // Function to calculate how much time pause
+        if (isPaused) {
+            isPaused = false
+            totalTimePaused += System.currentTimeMillis() - pauseStartTime
+        } else {
+            isPaused = true
+            pauseStartTime = System.currentTimeMillis()
+        }
+    }
+
 }
