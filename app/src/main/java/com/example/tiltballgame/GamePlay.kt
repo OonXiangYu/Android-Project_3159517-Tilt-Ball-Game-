@@ -67,6 +67,10 @@ class GamePlay : ComponentActivity(), SensorEventListener {
 
     var pauseStartTime = 0L // when the pause start
 
+    var homeBtnX = 0f // x axis of home button
+    var homeBtnY = 0f // y axis of home button
+    var homeBtnSize = 0f
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -195,11 +199,20 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                     val touchCamY = event.y
 
                     if (touchCamX >= pauseBtnX && touchCamX <= pauseBtnX + pauseBtnSize  &&
-                        touchCamY >= pauseBtnY  && touchCamY <= pauseBtnY + pauseBtnSize ) { // When player click the pause button or we can say top right of screen
+                        touchCamY >= pauseBtnY  && touchCamY <= pauseBtnY + pauseBtnSize ) { // When player click the pause button
 
                         togglePause()
                         invalidate()
                         return true
+                    }
+
+                    if (touchCamX >= homeBtnX && touchCamX <= homeBtnX + homeBtnSize  &&
+                        touchCamY >= homeBtnY  && touchCamY <= homeBtnY + homeBtnSize &&
+                        isPaused) { // When player click the home button and is pause
+
+                        val intent = Intent(this@GamePlay, MainActivity::class.java)
+                        startActivity(intent)
+
                     }
 
                     if(!isPaused){ // If the game not pause
@@ -302,6 +315,9 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                     "$sec s" // still under a minute
                 }
 
+                canvas.drawText("Time: $timeText", cameraX + 50f, cameraY + 300f, outlinePaint)
+                canvas.drawText("Time: $timeText", cameraX + 50f, cameraY + 300f, textPaint)
+
                 val pauseBtnBg = Paint().apply { // Pause button background
                     color = if (isPaused) Color.GREEN else Color.RED
                     isAntiAlias = true
@@ -352,11 +368,11 @@ class GamePlay : ComponentActivity(), SensorEventListener {
 
                     canvas.drawPath(path, pauseSymbol)
 
-                    // Draw Home button when paused
-                    val homeBtnX = 900f  // relative to world or camera
-                    val homeBtnY = 200f
-                    val homeBtnSize = 120f
-                    val homeBtnPaint = Paint().apply { color = Color.BLUE } // default color
+                    // Draw home button when pause
+                    homeBtnX = 2250f
+                    homeBtnY = 150f
+                    homeBtnSize = 120f
+                    val homeBtnPaint = Paint().apply { color = Color.DKGRAY }
 
                     canvas.drawRoundRect(
                         homeBtnX + cameraX,
@@ -366,17 +382,29 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                         20f, 20f,
                         homeBtnPaint
                     )
-                    // Optionally draw "Home" text
-                    val textPaint = Paint().apply {
+
+                    val iconPaint = Paint().apply {
                         color = Color.WHITE
-                        textSize = 50f
+                        style = Paint.Style.FILL
                         isAntiAlias = true
                     }
-                    canvas.drawText("Home", homeBtnX + cameraX + 20f, homeBtnY + cameraY + 75f, textPaint)
-                }
 
-                canvas.drawText("Time: $timeText", cameraX + 50f, cameraY + 300f, outlinePaint)
-                canvas.drawText("Time: $timeText", cameraX + 50f, cameraY + 300f, textPaint)
+                    val roofPath = Path().apply { // Roof
+                        moveTo(homeBtnX + cameraX + homeBtnSize / 2, homeBtnY + cameraY + 25f)
+                        lineTo(homeBtnX + cameraX + 25f, homeBtnY + cameraY + homeBtnSize / 2)
+                        lineTo(homeBtnX + cameraX + homeBtnSize - 25f, homeBtnY + cameraY + homeBtnSize / 2)
+                        close()
+                    }
+                    canvas.drawPath(roofPath, iconPaint)
+
+                    canvas.drawRect( // Main body of home
+                        homeBtnX + cameraX + 35f,
+                        homeBtnY + cameraY + homeBtnSize / 2,
+                        homeBtnX + cameraX + homeBtnSize - 35f,
+                        homeBtnY + cameraY + homeBtnSize - 25f,
+                        iconPaint
+                    )
+                }
 
                 invalidate()
             }
