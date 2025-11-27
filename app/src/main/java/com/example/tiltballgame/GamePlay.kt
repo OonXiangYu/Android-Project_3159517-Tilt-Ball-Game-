@@ -15,6 +15,7 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.view.MotionEvent
 import com.example.tiltballgame.ui.theme.TiltBallGameTheme
+import kotlinx.coroutines.*
 
 data class WorldObject(
     val x: Float,
@@ -70,6 +71,8 @@ class GamePlay : ComponentActivity(), SensorEventListener {
     var homeBtnX = 0f // x axis of home button
     var homeBtnY = 0f // y axis of home button
     var homeBtnSize = 0f
+
+    private val gameScope = CoroutineScope(Dispatchers.Main + SupervisorJob()) // handle multi thread
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -425,38 +428,47 @@ class GamePlay : ComponentActivity(), SensorEventListener {
             val x = event.values[0] // tilting left/right
             val y = event.values[1] // tilting forward/backward
 
-            // Swap axes for landscape
-            if(!isPaused) {
-                ballX += y * 5    // tilting forward/back tilts horizontally
-                ballY += x * 5   // tilting left/right tilts vertically
-            }else{
-                ballX += y * 0   // Make accelarate 0 when pause
-                ballY += x * 0
-            }
+            // Read current ball position
+            val currentBallX = ballX
+            val currentBallY = ballY
 
-            // Keep ball inside world
-            ballX = ballX.coerceIn(radius, worldWidth - radius)
-            ballY = ballY.coerceIn(radius, worldHeight - radius)
+            gameScope.launch(Dispatchers.Default) { // Do calculation in bg
 
-            // Collision detection and response
-            for (obj in objects) {
-                if (isColliding(ballX, ballY, radius, obj)) {
+                // Apply tilt movement and consider when paused
+                var newBallX = if (!isPaused) currentBallX + y * 5 else currentBallX
+                var newBallY = if (!isPaused) currentBallY + x * 5 else currentBallY
 
-                    if (obj.isGoal) { // Navigate to VictoryPage
-                        val intent = Intent(this@GamePlay, VictoryPage::class.java)
-                        intent.putExtra("Time Spend", timeSpend)
-                        startActivity(intent)
-                        return
+                // Keep ball inside world bounds
+                newBallX = newBallX.coerceIn(radius, worldWidth - radius)
+                newBallY = newBallY.coerceIn(radius, worldHeight - radius)
+
+                // Collision detection and response
+                for (obj in objects) {
+                    if (isColliding(newBallX, newBallY, radius, obj)) {
+
+                        if (obj.isGoal) { // Navigate to VictoryPage
+                            withContext(Dispatchers.Main) {
+                                val intent = Intent(this@GamePlay, VictoryPage::class.java)
+                                intent.putExtra("Time Spend", timeSpend)
+                                startActivity(intent)
+                            }
+
+                            return@launch
+                        }
+
+                        val corrected = resolveCollision(newBallX, newBallY, radius, obj)
+                        newBallX = corrected.first
+                        newBallY = corrected.second
                     }
+                }
 
-                    val corrected = resolveCollision(ballX, ballY, radius, obj)
-                    ballX = corrected.first
-                    ballY = corrected.second
+                // Update UI
+                withContext(Dispatchers.Main) {
+                    ballX = newBallX
+                    ballY = newBallY
+                    ballView.invalidate()
                 }
             }
-
-            // Redraw after movement
-            ballView.invalidate()
         }
     }
 
@@ -555,6 +567,11 @@ class GamePlay : ComponentActivity(), SensorEventListener {
             isPaused = true
             pauseStartTime = System.currentTimeMillis()
         }
+    }
+
+    override fun onDestroy() { // Cancel when leaving
+        super.onDestroy()
+        gameScope.cancel()
     }
 
 }
