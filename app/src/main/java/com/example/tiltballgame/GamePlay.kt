@@ -26,7 +26,10 @@ data class WorldObject(
     val isColorChanger: Boolean = false,
     var isGoal: Boolean = false,
     val type: String = "block",
-    val text: String = ""
+    val text: String = "",
+    val teleportId: Int? = null,
+    val radius: Float = 40f,
+    val shape: String = "rect"
 )
 
 class GamePlay : ComponentActivity(), SensorEventListener {
@@ -71,6 +74,8 @@ class GamePlay : ComponentActivity(), SensorEventListener {
     var homeBtnX = 0f // x axis of home button
     var homeBtnY = 0f // y axis of home button
     var homeBtnSize = 0f
+
+    private var tpCD = 0L // cd for teleport time
 
     private val gameScope = CoroutineScope(Dispatchers.Main + SupervisorJob()) // handle multi thread
 
@@ -181,6 +186,58 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                         WorldObject(ballX - 2600f , ballY - 1600f, 100f, 200f),
                         WorldObject(ballX - 3200f , ballY - 1600f, 100f,100f, "#08F26E", isGoal = true),
                     )
+                    3 -> listOf(
+                        WorldObject(ballX - 1100f , ballY - 350f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX - 2600f , ballY - 1200f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX - 3600f , ballY - 1500f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX + 1100f , ballY - 1500f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX - 1100f , ballY - 1200f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX - 3600f , ballY + 100f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX - 2600f , ballY + 100f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX + 1100f , ballY + 1350f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX - 1100f , ballY + 950f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX + 2600f , ballY + 950f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX + 1100f , ballY + 100f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX + 3600f , ballY - 350f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX + 2600f , ballY + 100f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX - 2600f , ballY + 950f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX - 3600f , ballY + 1350f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX - 2600f , ballY - 350f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX - 3600f , ballY - 350f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX + 3600f , ballY - 1200f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX + 2600f , ballY - 1500f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX + 3600f , ballY + 950f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX - 4000f , ballY - 1900f, 8000f, 300f),
+                        WorldObject(ballX - 4000f , ballY + 1550f, 8000f, 300f),
+                        WorldObject(ballX - 4000f , ballY - 1600f, 300f, 3200f),
+                        WorldObject(ballX + 3700f , ballY - 1600f, 300f, 3200f),
+                        WorldObject(ballX - 4000f , ballY - 1000f, 8000f, 550f),
+                        WorldObject(ballX - 4000f , ballY + 300f, 8000f, 550f),
+                        WorldObject(ballX - 2500f , ballY - 1600f, 1300f, 3200f),
+                        WorldObject(ballX + 1200f , ballY - 1600f, 1300f, 3200f),
+                        WorldObject(ballX - 1100f , ballY - 350f, colorCode = "#C77DFF", type = "tpIn", teleportId = 1, radius = 75f, shape = "circle"),
+                        WorldObject(ballX - 2600f , ballY - 1200f, colorCode = "#C77DFF", type = "tpOut", teleportId = 1, radius = 75f, shape = "circle"),
+                        WorldObject(ballX - 3600f , ballY - 1500f, colorCode = "#C77DFF", type = "tpIn", teleportId = 3, radius = 75f, shape = "circle"),
+                        WorldObject(ballX + 1100f , ballY - 1500f, colorCode = "#C77DFF", type = "tpOut", teleportId = 3, radius = 75f, shape = "circle"),
+                        WorldObject(ballX - 1100f , ballY - 1200f, colorCode = "#C77DFF", type = "tpIn", teleportId = 6, radius = 75f, shape = "circle"),
+                        WorldObject(ballX - 3600f , ballY + 100f, colorCode = "#C77DFF", type = "tpOut", teleportId = 6, radius = 75f, shape = "circle"),
+                        WorldObject(ballX - 2600f , ballY + 100f, colorCode = "#C77DFF", type = "tpIn", teleportId = 8, radius = 75f, shape = "circle"),
+                        WorldObject(ballX + 1100f , ballY + 1350f, colorCode = "#C77DFF", type = "tpOut", teleportId = 8, radius = 75f, shape = "circle"),
+                        WorldObject(ballX - 1100f , ballY + 950f, colorCode = "#C77DFF", type = "tpIn", teleportId = 9, radius = 75f, shape = "circle"),
+                        WorldObject(ballX + 2600f , ballY + 950f, colorCode = "#C77DFF", type = "tpOut", teleportId = 9, radius = 75f, shape = "circle"),
+                        WorldObject(ballX + 1100f , ballY + 100f, colorCode = "#C77DFF", type = "tpIn", teleportId = 2, radius = 75f, shape = "circle"),
+                        WorldObject(ballX + 3600f , ballY - 350f, colorCode = "#C77DFF", type = "tpOut", teleportId = 2, radius = 75f, shape = "circle"),
+                        WorldObject(ballX + 2600f , ballY + 100f, colorCode = "#C77DFF", type = "tpIn", teleportId = 4, radius = 75f, shape = "circle"),
+                        WorldObject(ballX - 2600f , ballY + 950f, colorCode = "#C77DFF", type = "tpOut", teleportId = 4, radius = 75f, shape = "circle"),
+                        WorldObject(ballX - 3600f , ballY + 1350f, colorCode = "#C77DFF", type = "tpIn", teleportId = 5, radius = 75f, shape = "circle"),
+                        WorldObject(ballX - 2600f , ballY - 350f, colorCode = "#C77DFF", type = "tpOut", teleportId = 5, radius = 75f, shape = "circle"),
+                        WorldObject(ballX - 3600f , ballY - 350f, colorCode = "#C77DFF", type = "tpIn", teleportId = 7, radius = 75f, shape = "circle"),
+                        WorldObject(ballX + 3600f , ballY - 1200f, colorCode = "#C77DFF", type = "tpOut", teleportId = 7, radius = 75f, shape = "circle"),
+                        WorldObject(ballX + 2600f , ballY - 1500f, colorCode = "#C77DFF", type = "tpIn", teleportId = 10, radius = 75f, shape = "circle"),
+                        WorldObject(ballX + 3600f , ballY + 950f, colorCode = "#C77DFF", type = "tpOut", teleportId = 10, radius = 75f, shape = "circle"),
+                        WorldObject(ballX - 950f , ballY - 350f,100f,50f, type = "text", text = "TP?"),
+                        WorldObject(ballX + 3600f , ballY + 1450f, 100f,100f, "#08F26E", isGoal = true),
+                    )
                     else -> listOf(
                         WorldObject(ballX - 100f, ballY - 100f),
                         WorldObject(ballX + 120f, ballY - 80f),
@@ -275,12 +332,18 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                                 obj.y + obj.height / 2,  // Roughly center vertically
                                 textPaint
                             )
-                        }else{ // If the world object is block
+                        }else if (obj.shape == "rect"){ // If the world object is rectangle block
                             val objPaint = Paint().apply {
                                 color = Color.parseColor(obj.colorCode)
                                 isAntiAlias = true
                             }
                             canvas.drawRect(obj.x, obj.y, obj.x + obj.width, obj.y + obj.height, objPaint)
+                        }else if (obj.shape == "circle"){ // If the object is teleport
+                            val objPaint = Paint().apply {
+                                color = Color.parseColor(obj.colorCode)
+                                isAntiAlias = true
+                            }
+                            canvas.drawCircle(obj.x, obj.y, obj.radius, objPaint)
                         }
                     }
                 }
@@ -432,6 +495,8 @@ class GamePlay : ComponentActivity(), SensorEventListener {
             val currentBallX = ballX
             val currentBallY = ballY
 
+
+
             gameScope.launch(Dispatchers.Default) { // Do calculation in bg
 
                 // Apply tilt movement and consider when paused
@@ -441,6 +506,8 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                 // Keep ball inside world bounds
                 newBallX = newBallX.coerceIn(radius, worldWidth - radius)
                 newBallY = newBallY.coerceIn(radius, worldHeight - radius)
+
+                val now = System.currentTimeMillis()
 
                 // Collision detection and response
                 for (obj in objects) {
@@ -454,6 +521,38 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                             }
 
                             return@launch
+                        }
+                        if (now - tpCD >= 1000) {
+
+                            if (obj.teleportId != null && obj.type == "tpIn") { // If collision with teleport portal for in
+
+                                val outPortal =
+                                    objects.firstOrNull { it.teleportId == obj.teleportId && it.type == "tpOut" }
+
+                                if (outPortal != null) { // Tp to below portal
+                                    newBallX = outPortal.x + outPortal.width / 2
+                                    newBallY = outPortal.y + outPortal.height + 50f
+
+                                    tpCD = now
+                                }
+
+                                break
+                            }
+
+                            if (obj.teleportId != null && obj.type == "tpOut") { // If collision with teleport portal for out
+
+                                val inPortal =
+                                    objects.firstOrNull { it.teleportId == obj.teleportId && it.type == "tpIn" }
+
+                                if (inPortal != null) { // Tp to below portal
+                                    newBallX = inPortal.x + inPortal.width / 2
+                                    newBallY = inPortal.y + inPortal.height + 50f
+
+                                    tpCD = now
+                                }
+
+                                break
+                            }
                         }
 
                         val corrected = resolveCollision(newBallX, newBallY, radius, obj)
@@ -492,7 +591,7 @@ class GamePlay : ComponentActivity(), SensorEventListener {
 
         val objColor = Color.parseColor(obj.colorCode)
 
-        if (objColor == paint.color || obj.type == "text") { // If color is same or the object is a text then no collision
+        if (objColor == paint.color || obj.type == "text" || obj.type == "tpBg") { // If color is same or the object is a text then no collision
             return false
         }
 
