@@ -236,6 +236,30 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                         WorldObject(ballX + 2600f , ballY - 1500f, colorCode = "#C77DFF", type = "tpIn", teleportId = 10, radius = 75f, shape = "circle"),
                         WorldObject(ballX + 3600f , ballY + 950f, colorCode = "#C77DFF", type = "tpOut", teleportId = 10, radius = 75f, shape = "circle"),
                         WorldObject(ballX - 950f , ballY - 350f,100f,50f, type = "text", text = "TP?"),
+                        WorldObject(ballX - 500f , ballY - 450f, 100f, 750f, "#EF476F", isColorChanger = true),
+                        WorldObject(ballX + 500f , ballY - 450f, 100f, 750f, "#EF476F", isColorChanger = true),
+                        WorldObject(ballX - 3200f , ballY - 1600f, 100f, 600f, "#118AF2", isColorChanger = true),
+                        WorldObject(ballX + 900f , ballY - 1600f, 100f, 400f),
+                        WorldObject(ballX + 600f , ballY - 1400f, 100f, 400f),
+                        WorldObject(ballX , ballY - 1600f, 100f, 600f, "#EF476F", isColorChanger = true),
+                        WorldObject(ballX - 900f , ballY - 1400f, 100f, 400f),
+                        WorldObject(ballX - 600f , ballY - 1600f, 100f, 400f),
+                        WorldObject(ballX , ballY + 850f, 100f, 700f, "#118AF2", isColorChanger = true),
+                        WorldObject(ballX + 250f , ballY + 850f, 100f, 300f),
+                        WorldObject(ballX + 250f , ballY + 1350f, 100f, 200f),
+                        WorldObject(ballX + 500f , ballY + 850f, 100f, 200f),
+                        WorldObject(ballX + 500f , ballY + 1250f, 100f, 300f),
+                        WorldObject(ballX + 750f , ballY + 850f, 100f, 100f),
+                        WorldObject(ballX + 750f , ballY + 1150f, 100f, 400f),
+                        WorldObject(ballX - 250f , ballY + 850f, 100f, 300f),
+                        WorldObject(ballX - 250f , ballY + 1350f, 100f, 200f),
+                        WorldObject(ballX - 500f , ballY + 850f, 100f, 200f),
+                        WorldObject(ballX - 500f , ballY + 1250f, 100f, 300f),
+                        WorldObject(ballX - 750f , ballY + 850f, 100f, 100f),
+                        WorldObject(ballX - 750f , ballY + 1150f, 100f, 400f),
+                        WorldObject(ballX + 3100f, ballY - 450f, 100f, 750f, "#118AF2", isColorChanger = true),
+                        WorldObject(ballX - 3100f, ballY + 850f, 100f, 700f, "#EF476F", isColorChanger = true),
+                        WorldObject(ballX + 3100f, ballY - 1600f, 100f, 600f, "#118AF2", isColorChanger = true),
                         WorldObject(ballX + 3600f , ballY + 1450f, 100f,100f, "#08F26E", isGoal = true),
                     )
                     else -> listOf(
@@ -438,7 +462,7 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                     homeBtnX = 2250f
                     homeBtnY = 150f
                     homeBtnSize = 120f
-                    val homeBtnPaint = Paint().apply { color = Color.DKGRAY }
+                    val homeBtnPaint = Paint().apply { color = Color.RED }
 
                     canvas.drawRoundRect(
                         homeBtnX + cameraX,
