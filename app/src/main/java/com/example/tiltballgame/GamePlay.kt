@@ -262,11 +262,30 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                         WorldObject(ballX + 3100f, ballY - 1600f, 100f, 600f, "#118AF2", isColorChanger = true),
                         WorldObject(ballX + 3600f , ballY + 1450f, 100f,100f, "#08F26E", isGoal = true),
                     )
+                    4 -> listOf(
+                        WorldObject(ballX - 1600f , ballY - 600f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX - 2100f , ballY - 200f, colorCode = "#7B2CBF", type = "tpBg", radius = 90f, shape = "circle"),
+                        WorldObject(ballX - 4000f , ballY - 1900f, 8000f, 300f),
+                        WorldObject(ballX - 4000f , ballY + 1550f, 8000f, 300f),
+                        WorldObject(ballX - 4000f , ballY - 1600f, 300f, 3200f),
+                        WorldObject(ballX + 3700f , ballY - 1600f, 300f, 3200f),
+                        WorldObject(ballX - 2000f , ballY - 1000f, 4000f, 300f),
+                        WorldObject(ballX - 2000f , ballY + 900f, 4000f, 300f),
+                        WorldObject(ballX - 2000f, ballY - 1000f, 300f, 2000f),
+                        WorldObject(ballX + 1700f, ballY - 1000f, 300f, 2000f),
+                        WorldObject(ballX - 800f , ballY + 500f, 2200f, 100f),
+                        WorldObject(ballX - 800f , ballY - 700f, 100f, 1300f),
+                        WorldObject(ballX - 3700f , ballY, 2000f, 300f),
+                        WorldObject(ballX + 300f , ballY - 500f, 100f, 1000f),
+                        WorldObject(ballX - 700f , ballY - 200f, 800f, 100f),
+                        WorldObject(ballX - 400f , ballY - 500f, 800f, 100f),
+                        WorldObject(ballX + 600f , ballY - 700f, 100f, 1000f),
+                        WorldObject(ballX + 900f , ballY - 500f, 100f, 1000f),
+                        WorldObject(ballX + 1200f , ballY - 700f, 500f, 1000f),
+                        WorldObject(ballX - 1600f , ballY - 600f, colorCode = "#C77DFF", type = "tpIn", teleportId = 1, radius = 75f, shape = "circle"),
+                        WorldObject(ballX - 2100f , ballY - 200f, colorCode = "#C77DFF", type = "tpOut", teleportId = 1, radius = 75f, shape = "circle"),
+                    )
                     else -> listOf(
-                        WorldObject(ballX - 100f, ballY - 100f),
-                        WorldObject(ballX + 120f, ballY - 80f),
-                        WorldObject(ballX - 90f, ballY + 130f),
-                        WorldObject(ballX + 110f, ballY + 100f)
                     )
                 }
             }

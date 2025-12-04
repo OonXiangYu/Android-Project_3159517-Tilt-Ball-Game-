@@ -132,33 +132,19 @@ class MainActivity : ComponentActivity() {
                         intent.putExtra("Level Number", selectedLevel)
                         context.startActivity(intent)
                     }
-                    Spacer(modifier = Modifier.width(10.dp))
+                }
+
+                Spacer(modifier = Modifier.height(15.dp))
+
+                Row {
                     LevelButton(level = 3) { selectedLevel ->
                         lvlNum.value = selectedLevel
                         val intent = Intent(context, GamePlay::class.java)
                         intent.putExtra("Level Number", selectedLevel)
                         context.startActivity(intent)
                     }
-                }
-
-                Spacer(modifier = Modifier.height(15.dp))
-
-                Row {
+                    Spacer(modifier = Modifier.width(10.dp))
                     LevelButton(level = 4) { selectedLevel ->
-                        lvlNum.value = selectedLevel
-                        val intent = Intent(context, GamePlay::class.java)
-                        intent.putExtra("Level Number", selectedLevel)
-                        context.startActivity(intent)
-                    }
-                    Spacer(modifier = Modifier.width(10.dp))
-                    LevelButton(level = 5) { selectedLevel ->
-                        lvlNum.value = selectedLevel
-                        val intent = Intent(context, GamePlay::class.java)
-                        intent.putExtra("Level Number", selectedLevel)
-                        context.startActivity(intent)
-                    }
-                    Spacer(modifier = Modifier.width(10.dp))
-                    LevelButton(level = 6) { selectedLevel ->
                         lvlNum.value = selectedLevel
                         val intent = Intent(context, GamePlay::class.java)
                         intent.putExtra("Level Number", selectedLevel)
@@ -178,8 +164,8 @@ class MainActivity : ComponentActivity() {
         Button(
             onClick = { onClick(level) },
             modifier = Modifier
-                .height(75.dp)
-                .width(75.dp),
+                .height(120.dp)
+                .width(120.dp),
             shape = MaterialTheme.shapes.medium,
             colors = ButtonDefaults.buttonColors(
                 containerColor = color,
