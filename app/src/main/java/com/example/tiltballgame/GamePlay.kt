@@ -339,6 +339,19 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                         WorldObject(ballX + 2400f , ballY + 800f, 1300f, 800f),
                         WorldObject(ballX - 1600f , ballY - 600f, colorCode = "#C77DFF", type = "tpIn", teleportId = 1, radius = 75f, shape = "circle"),
                         WorldObject(ballX - 2100f , ballY - 200f, colorCode = "#C77DFF", type = "tpOut", teleportId = 1, radius = 75f, shape = "circle"),
+                        WorldObject(ballX + 1900f , ballY + 1000f, 200f, 400f),
+                        WorldObject(ballX + 1500f , ballY + 1350f, 200f, 400f),
+                        WorldObject(ballX + 1100f , ballY + 1000f, 200f, 400f),
+                        WorldObject(ballX + 700f , ballY + 1350f, 200f, 400f),
+                        WorldObject(ballX + 300f , ballY + 1000f, 200f, 400f),
+                        WorldObject(ballX - 100f , ballY + 1350f, 200f, 400f),
+                        WorldObject(ballX - 500f , ballY + 1000f, 200f, 400f),
+                        WorldObject(ballX - 900f , ballY + 1350f, 200f, 400f),
+                        WorldObject(ballX - 1300f , ballY + 1000f, 200f, 400f),
+                        WorldObject(ballX - 1700f , ballY + 1350f, 200f, 400f),
+                        WorldObject(ballX - 3500f , ballY + 1000f, 1600f, 400f),
+                        WorldObject(ballX - 3700f , ballY + 700f, 1400f, 100f),
+                        WorldObject(ballX - 3600f , ballY + 400f, 100f,100f, "#08F26E", isGoal = true),
                     )
                     else -> listOf(
                     )
