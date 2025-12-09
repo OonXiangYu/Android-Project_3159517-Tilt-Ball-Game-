@@ -628,6 +628,7 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                             withContext(Dispatchers.Main) {
                                 val intent = Intent(this@GamePlay, VictoryPage::class.java)
                                 intent.putExtra("Time Spend", timeSpend)
+                                intent.putExtra("Level Number", lvlNum)
                                 startActivity(intent)
                             }
 

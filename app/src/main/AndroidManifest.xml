@@ -12,6 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TiltBallGame">
         <activity
+            android:name=".Leaderboard"
+            android:exported="false"
+            android:label="@string/title_activity_leaderboard"
+            android:theme="@style/Theme.TiltBallGame" />
+        <activity
             android:name=".VictoryPage"
             android:exported="false"
             android:label="@string/title_activity_victory_page"

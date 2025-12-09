@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "677754019590",
+    "project_id": "android-project--tiltball-game",
+    "storage_bucket": "android-project--tiltball-game.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677754019590:android:91e5a473a06634fd4c0887",
+        "android_client_info": {
+          "package_name": "com.example.tiltballgame"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBr5EvS26LlPcrYcvuRndkA8d-w5BMukDA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
