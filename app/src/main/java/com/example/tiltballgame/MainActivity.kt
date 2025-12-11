@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -75,9 +76,25 @@ class MainActivity : ComponentActivity() {
                     Text(text = "Tilt", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.primary)
                     Text(text = "Ball", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.secondary)
                 }
+
                 Spacer(modifier = Modifier.height(10.dp))
-                Button({ navController.navigate("level")}){ // Button to next page (Level page)
-                    Text("Start", style = MaterialTheme.typography.titleMedium)
+
+                Column(
+                    modifier = Modifier.width(200.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Button({ navController.navigate("level") }, modifier = Modifier.fillMaxWidth()) { // Button to next page (Level page)
+                        Text("Start", style = MaterialTheme.typography.titleMedium)
+                    }
+
+                    Button({
+                            val intent = Intent(this@MainActivity, Leaderboard::class.java)
+                            startActivity(intent)
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) { // Button to next page (Leaderboard page)
+                        Text("Leaderboard", style = MaterialTheme.typography.titleMedium)
+                    }
                 }
             }
         }

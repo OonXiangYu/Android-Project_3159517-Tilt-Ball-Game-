@@ -121,6 +121,7 @@ class VictoryPage : ComponentActivity() {
                             Button(
                                 onClick = {
                                     val intent = Intent(this@VictoryPage, Leaderboard::class.java)
+                                    intent.putExtra("Level", lvlnum)
                                     startActivity(intent)
                                 },
                                 colors = ButtonDefaults.buttonColors(
@@ -136,7 +137,7 @@ class VictoryPage : ComponentActivity() {
                             Text(text = "Not in top 10.", style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onPrimary)
                         }
                     }
-
+                        Spacer(modifier = Modifier.height(8.dp))
                         Button(
                             onClick = {
                                 val intent = Intent(this@VictoryPage, MainActivity::class.java)
@@ -183,11 +184,25 @@ class VictoryPage : ComponentActivity() {
     suspend fun submitScore(level: Int, username: String, time: Long): Boolean {
         return try {
             val db = FirebaseFirestore.getInstance()
+            val collectionName = "Level$level"
+
             val data = hashMapOf( // prepare data in the format
                 "username" to username,
                 "time" to time
             )
-            db.collection("Level$level").add(data).await() // append it into correct collection
+            db.collection(collectionName).add(data).await() // append it into correct collection
+
+            val result = db.collection(collectionName).orderBy("time").get().await() // get all data
+
+            val times: List<Pair<String, Long>> = result.mapNotNull { doc -> // create a list of pair (2d array)
+                val t = doc.getLong("time") // get time
+                if (t != null) doc.id to t else null // pair time with id
+            }
+
+            if (times.size > 10) { // if data more than 10, delete the worst
+                val worst = times.maxByOrNull { it.second }!!
+                db.collection(collectionName).document(worst.first).delete().await()
+            }
             true
         } catch (e: Exception) {
             e.printStackTrace()
