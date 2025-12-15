@@ -629,7 +629,9 @@ class GamePlay : ComponentActivity(), SensorEventListener {
                                 val intent = Intent(this@GamePlay, VictoryPage::class.java)
                                 intent.putExtra("Time Spend", timeSpend)
                                 intent.putExtra("Level Number", lvlNum)
+                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                                 startActivity(intent)
+                                finish()
                             }
 
                             return@launch

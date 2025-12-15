@@ -122,7 +122,9 @@ class VictoryPage : ComponentActivity() {
                                 onClick = {
                                     val intent = Intent(this@VictoryPage, Leaderboard::class.java)
                                     intent.putExtra("Level", lvlnum)
+                                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                                     startActivity(intent)
+                                    finish()
                                 },
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = MaterialTheme.colorScheme.onSecondary,
